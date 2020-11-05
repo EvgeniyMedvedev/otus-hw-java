@@ -10,3 +10,4 @@
 rootProject.name = 'otus-hw-java'
 
 include('hw-gradle-01')
+include('hw-array-02')
