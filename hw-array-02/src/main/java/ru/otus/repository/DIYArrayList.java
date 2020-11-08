@@ -8,7 +8,6 @@ package ru.otus.repository;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -25,12 +24,14 @@ public class DIYArrayList<E> implements List<E> {
     private int size = 0;
     private Object[] elements;
     private int capacity = 10;
+    private Iterator<E> iterator;
 
     public DIYArrayList(int capacity) {
         if (capacity < 0) {
             throw new IllegalArgumentException("Illegal Capacity: " +
                     capacity);
         }
+        size = capacity;
         this.elements = new Object[capacity];
     }
 
@@ -49,7 +50,7 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == 0  || elements == null;
     }
 
     @Override
@@ -59,7 +60,10 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new AIYIterator<E>();
+        if (iterator == null) {
+            iterator = new AIYIterator<>();
+        }
+        return iterator;
     }
 
     private class AIYIterator<E> implements Iterator<E> {
@@ -83,8 +87,8 @@ public class DIYArrayList<E> implements List<E> {
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
-        return null;
+    public <E> E[] toArray(E[] a) {
+        return (E[]) elements;
     }
 
     @Override
@@ -246,7 +250,7 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public ListIterator<E> listIterator() {
-        throw new UnsupportedOperationException();
+        return new DIYListIterator<>();
     }
 
     @Override
@@ -257,5 +261,53 @@ public class DIYArrayList<E> implements List<E> {
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException();
+    }
+
+    public class DIYListIterator<E> implements ListIterator<E>{
+
+        @Override
+        public boolean hasNext() {
+            return iterator().hasNext();
+        }
+
+        @Override
+        public E next() {
+            return (E) iterator().next();
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return false;
+        }
+
+        @Override
+        public E previous() {
+            return null;
+        }
+
+        @Override
+        public int nextIndex() {
+            return 0;
+        }
+
+        @Override
+        public int previousIndex() {
+            return 0;
+        }
+
+        @Override
+        public void remove() {
+            iterator().remove();
+        }
+
+        @Override
+        public void set(E e) {
+
+        }
+
+        @Override
+        public void add(E e) {
+
+        }
     }
 }

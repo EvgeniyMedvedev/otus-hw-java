@@ -6,8 +6,6 @@
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +13,7 @@ import ru.otus.repository.DIYArrayList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +30,7 @@ public class DIYArrayListTest {
 
     @Before
     public void init() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             UUID uuid = UUID.randomUUID();
             diyList.add(uuid.toString() + i);
             arrayList.add(uuid.toString() + i);
@@ -51,6 +50,20 @@ public class DIYArrayListTest {
         arrayList.addAll(asList);
 
         assertEquals(diyList.size(), arrayList.size());
+    }
+
+    @Test
+    public void collectionsAddAll(){
+        List<String> copy = new DIYArrayList<>();
+        Collections.addAll(copy, diyList.toArray(new String[]{}));
+        assertFalse(copy.isEmpty());
+    }
+
+    @Test
+    public void copyTest(){
+        List<String> copy = new DIYArrayList<>(diyList.size());
+        Collections.copy(copy, diyList);
+        assertArrayEquals(copy.toArray(), diyList.toArray());
     }
 
     @Test
