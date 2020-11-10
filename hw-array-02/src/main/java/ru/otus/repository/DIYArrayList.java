@@ -192,9 +192,10 @@ public class DIYArrayList<E> implements List<E> {
     public E set(int index, E element) {
         if (index > elements.length || index < 0) {
             throw new IndexOutOfBoundsException(
-                    String.format("Индекс превышает размер коллекции, для элемента %s метод set() провалился", element));
+                    String.format("Индекс превышает размер коллекции или меньше нуля, для элемента %s метод set() провалился", element));
         }
         elements[index] = element;
+        size++;
         return (E) elements[index];
     }
 
@@ -259,8 +260,7 @@ public class DIYArrayList<E> implements List<E> {
 
         @Override
         public boolean hasNext() {
-            index++;
-            return (index < size) && elements[index] != null;
+            return index + 1< elements.length;
         }
 
         @Override
@@ -281,10 +281,6 @@ public class DIYArrayList<E> implements List<E> {
     }
 
     private class DIYListIterator extends AIYIterator implements ListIterator<E> {
-
-        DIYListIterator() {
-            super();
-        }
 
         int cursor = 0;
 
@@ -320,14 +316,16 @@ public class DIYArrayList<E> implements List<E> {
 
         @Override
         public void set(E e) {
-            if (hasNext())
-                DIYArrayList.this.add(getIndex(), e);
+            if (hasNext()) {
+                DIYArrayList.this.set(cursor++, e);
+            }
         }
 
         @Override
         public void add(E e) {
-            if (hasNext())
-                DIYArrayList.this.add(getIndex(), e);
+            if (hasNext()) {
+                DIYArrayList.this.set(cursor++, e);
+            }
         }
     }
 }
