@@ -12,6 +12,7 @@ package ru.otus;
  */
 public class App {
     public static void main(String[] args) {
-        System.out.println("Смотреть тест");
+        System.out.println("В этом модуле моя реализация листа, таких много, но это моя.");
+        System.out.println("Демонстрация работоспособности в тесте");
     }
 }
