@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 /**
@@ -50,35 +51,23 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0  || elements == null;
+        return size == 0 || elements == null;
     }
 
     @Override
     public boolean contains(Object o) {
-        return stream().anyMatch(e -> e.equals(o));
+        for (Object exp : elements) {
+            return exp.equals(0);
+        }
+        return false;
     }
 
     @Override
     public Iterator<E> iterator() {
         if (iterator == null) {
-            iterator = new AIYIterator<>();
+            iterator = new AIYIterator();
         }
         return iterator;
-    }
-
-    private class AIYIterator<E> implements Iterator<E> {
-
-        private int index = 0;
-
-        @Override
-        public boolean hasNext() {
-            return (index < size) && elements[index] != null;
-        }
-
-        @Override
-        public E next() {
-            return (E) elements[index++];
-        }
     }
 
     @Override
@@ -88,7 +77,7 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public <E> E[] toArray(E[] a) {
-        return (E[]) elements;
+        return (E[]) Arrays.copyOf(elements, size, a.getClass());
     }
 
     @Override
@@ -142,10 +131,10 @@ public class DIYArrayList<E> implements List<E> {
             elements = newArray;
         }
         System.arraycopy(objects, 0, elements, size, c.toArray().length);
-        size += c.toArray().length;
+        size += objects.length;
 
 
-        return c.toArray().length != 0;
+        return objects.length != 0;
     }
 
     @Override
@@ -202,9 +191,11 @@ public class DIYArrayList<E> implements List<E> {
     @Override
     public E set(int index, E element) {
         if (index > elements.length || index < 0) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(
+                    String.format("Индекс превышает размер коллекции или меньше нуля, для элемента %s метод set() провалился", element));
         }
         elements[index] = element;
+        size++;
         return (E) elements[index];
     }
 
@@ -250,7 +241,7 @@ public class DIYArrayList<E> implements List<E> {
 
     @Override
     public ListIterator<E> listIterator() {
-        return new DIYListIterator<>();
+        return new DIYListIterator();
     }
 
     @Override
@@ -263,17 +254,35 @@ public class DIYArrayList<E> implements List<E> {
         throw new UnsupportedOperationException();
     }
 
-    public class DIYListIterator<E> implements ListIterator<E>{
+    private class AIYIterator implements Iterator<E> {
+
+        private int index = 0;
 
         @Override
         public boolean hasNext() {
-            return iterator().hasNext();
+            return index + 1< elements.length;
         }
 
         @Override
         public E next() {
-            return (E) iterator().next();
+            if (hasNext())
+                return (E) elements[index++];
+
+            return null;
         }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+    }
+
+    private class DIYListIterator extends AIYIterator implements ListIterator<E> {
+
+        int cursor = 0;
 
         @Override
         public boolean hasPrevious() {
@@ -297,17 +306,26 @@ public class DIYArrayList<E> implements List<E> {
 
         @Override
         public void remove() {
-            iterator().remove();
+
+        }
+
+        @Override
+        public void forEachRemaining(Consumer action) {
+
         }
 
         @Override
         public void set(E e) {
-
+            if (hasNext()) {
+                DIYArrayList.this.set(cursor++, e);
+            }
         }
 
         @Override
         public void add(E e) {
-
+            if (hasNext()) {
+                DIYArrayList.this.set(cursor++, e);
+            }
         }
     }
 }

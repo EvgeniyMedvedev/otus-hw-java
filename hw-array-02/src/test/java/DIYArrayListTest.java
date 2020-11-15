@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * DIYArrayListTest.
@@ -45,6 +46,22 @@ public class DIYArrayListTest {
     }
 
     @Test
+    public void addTest() {
+        String id = UUID.randomUUID().toString();
+        List<String> strings = new DIYArrayList<>();
+        strings.add(id);
+        assertEquals(strings.get(0), id);
+    }
+
+    @Test
+    public void setTest() {
+        String id = UUID.randomUUID().toString();
+        List<String> strings = new DIYArrayList<>();
+        strings.set(1,id);
+        assertEquals(strings.get(1), id);
+    }
+
+    @Test
     public void addAllTest() {
         diyList.addAll(asList);
         arrayList.addAll(asList);
@@ -56,14 +73,26 @@ public class DIYArrayListTest {
     public void collectionsAddAll(){
         List<String> copy = new DIYArrayList<>();
         Collections.addAll(copy, diyList.toArray(new String[]{}));
-        assertFalse(copy.isEmpty());
+        Logger.getGlobal().info(Arrays.toString(copy.toArray()));
+        assertArrayEquals(copy.toArray(), diyList.toArray());
     }
 
     @Test
     public void copyTest(){
-        List<String> copy = new DIYArrayList<>(diyList.size());
+        List<String> copy = new DIYArrayList<>(diyList.toArray().length);
         Collections.copy(copy, diyList);
+
+        Logger.getGlobal().info(Arrays.toString(copy.toArray()));
         assertArrayEquals(copy.toArray(), diyList.toArray());
+    }
+
+    @Test
+    public void copy2Test(){
+        List<String> copy = new ArrayList<>(arrayList.toArray().length);
+        Collections.copy(copy, arrayList);
+
+        Logger.getGlobal().info(Arrays.toString(copy.toArray()));
+        assertArrayEquals(copy.toArray(), arrayList.toArray());
     }
 
     @Test
