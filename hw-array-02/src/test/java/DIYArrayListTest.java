@@ -87,15 +87,6 @@ public class DIYArrayListTest {
     }
 
     @Test
-    public void copy2Test(){
-        List<String> copy = new ArrayList<>(arrayList.toArray().length);
-        Collections.copy(copy, arrayList);
-
-        Logger.getGlobal().info(Arrays.toString(copy.toArray()));
-        assertArrayEquals(copy.toArray(), arrayList.toArray());
-    }
-
-    @Test
     public void remove(){
         String s = asList.get(0);
         diyList.remove(s);
