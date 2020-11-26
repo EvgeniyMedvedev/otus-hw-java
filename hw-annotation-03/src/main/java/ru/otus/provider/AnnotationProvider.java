@@ -8,6 +8,7 @@ import ru.otus.exception.AssertionException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * AnnotationService.
@@ -15,6 +16,9 @@ import java.util.Arrays;
  * @author Evgeniy_Medvedev
  */
 public class AnnotationProvider {
+
+    private static int fail;
+    private static int success;
 
     public static void test(Class<?> clazz) {
         Method[] declaredMethods = clazz.getDeclaredMethods();
@@ -39,16 +43,17 @@ public class AnnotationProvider {
                     for (Method beforeMethod : after) {
                         beforeMethod.invoke(o);
                     }
+                    success++;
                 } catch (IllegalAccessException | InvocationTargetException | AssertionException e) {
-                    System.err.println("Не удалось выполнить метод \n" +
+                    Logger.getLogger("Test").warning("Не удалось выполнить метод \n" +
                             "Failed to execute method \n" + method);
-                    if (e.getClass() == AssertionException.class){
-                        continue;
-                    }
-                    e.printStackTrace();
+                    fail++;
+                    continue;
                 }
             }
         }
+
+        Logger.getLogger("Test").info(String.format("Отработано успешно - %d тестов.\n", success) + String.format("Свалилось - %d тестов", fail));
     }
 
     private static Method[] before(Class<?> clazz) {
