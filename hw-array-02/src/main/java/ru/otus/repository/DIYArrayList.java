@@ -1,10 +1,4 @@
-/*
- * VTB Group. Do not reproduce without permission in writing.
- * Copyright (c) 2020 VTB Group. All rights reserved.
- */
-
 package ru.otus.repository;
-
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,7 +15,6 @@ import java.util.logging.Logger;
  */
 public class DIYArrayList<E> implements List<E> {
 
-    //    ArrayList
     private int size = 0;
     private Object[] elements;
     private int capacity = 10;
