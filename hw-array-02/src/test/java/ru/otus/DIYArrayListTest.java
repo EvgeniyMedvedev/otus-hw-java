@@ -1,7 +1,4 @@
-/*
- * VTB Group. Do not reproduce without permission in writing.
- * Copyright (c) 2020 VTB Group. All rights reserved.
- */
+package ru.otus;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -19,7 +16,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
- * DIYArrayListTest.
+ * ru.otus.DIYArrayListTest.
  *
  * @author Evgeniy_Medvedev
  */
