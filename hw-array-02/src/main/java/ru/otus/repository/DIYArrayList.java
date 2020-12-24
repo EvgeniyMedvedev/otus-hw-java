@@ -210,7 +210,7 @@ public class DIYArrayList<E> implements List<E> {
     @Override
     public E remove(int index) {
         if (index > elements.length || index < 0) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(index);
         }
         if (size == elements.length - 1) {
             Object[] newArray = new Object[(int) (elements.length * 1.5)];

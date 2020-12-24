@@ -1,6 +1,11 @@
 package ru.otus;
 
-import static ru.otus.generator.JVMErrorGenerator.callOOM;
+import static ru.otus.generator.JVMErrorGenerator.throwOutOfMemoryG1;
+import static ru.otus.generator.JVMErrorGenerator.throwOutOfMemoryG1WithLowMemory;
+import static ru.otus.generator.JVMErrorGenerator.throwOutOfMemoryParallel;
+import static ru.otus.generator.JVMErrorGenerator.throwOutOfMemoryParallelWithLowMemory;
+import static ru.otus.generator.JVMErrorGenerator.throwOutOfMemoryZGC;
+import static ru.otus.generator.JVMErrorGenerator.throwOutOfMemoryZGCWithLowMemory;
 
 import com.sun.management.GarbageCollectionNotificationInfo;
 
@@ -20,17 +25,24 @@ public class GcDemo {
 
     private static int oldGenerationCount;
     private static int yongGenerationCount;
+    private static long totalTimeGC;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         System.out.println("Starting pid: " + ManagementFactory.getRuntimeMXBean().getName());
         switchOnMonitoring();
         long beginTime = System.currentTimeMillis();
+
         try {
-            callOOM();
+//            throwOutOfMemoryG1();
+//            throwOutOfMemoryG1WithLowMemory();
+//            throwOutOfMemoryZGC();
+//            throwOutOfMemoryZGCWithLowMemory();
+            throwOutOfMemoryParallel();
+//            throwOutOfMemoryParallelWithLowMemory();
         }catch (OutOfMemoryError er){
-            System.out.printf("time: %d , count generation young - %d and old - %d%n",
+            System.out.printf("time: %d , count generation young - %d and old - %d%n and total working time - %d \n",
                     (System.currentTimeMillis() - beginTime) / 1000,
-                    yongGenerationCount, oldGenerationCount);
+                    yongGenerationCount, oldGenerationCount, totalTimeGC);
             er.printStackTrace();
         }
 
@@ -55,6 +67,8 @@ public class GcDemo {
                     long duration = info.getGcInfo().getDuration();
 
                     System.out.println("start:" + startTime + " Name:" + gcName + ", action:" + gcAction + ", gcCause:" + gcCause + "(" + duration + " ms)");
+
+                    totalTimeGC += duration;
                 }
             };
             emitter.addNotificationListener(listener, null, null);

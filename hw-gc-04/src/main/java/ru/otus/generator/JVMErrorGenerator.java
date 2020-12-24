@@ -1,15 +1,11 @@
 package ru.otus.generator;
 
-import lombok.SneakyThrows;
-import lombok.val;
-import ru.otus.GcDemo;
 import ru.otus.repository.DIYArrayList;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * JVMErrorGenerator.
@@ -42,12 +38,16 @@ public class JVMErrorGenerator {
     private static final String G1_WITH_LOW_MEMORY = "G1 with low memory";
     private static final String ZGC_WITH_LOW_MEMORY = "ZGC with low memory";
     private static final String DEFAULT_ZGC = "ZGC default";
+    private static final String PARALLEL = "PARALLEL default";
+    private static final String PARALLEL_WITH_LOW_MEMORY = "PARALLEL with low memory";
 
-    private static final Map<String, int[]> configure = Map.
-            of(DEFAULT_G1, new int[]{2450, 1},
-            G1_WITH_LOW_MEMORY, new int[]{290, 1},
-            ZGC_WITH_LOW_MEMORY, new int[]{110, 1},
-            DEFAULT_ZGC, new int[]{1000, 1});
+    private static final Map<String, Integer> configure = Map.
+            of(DEFAULT_G1, 7700,
+            G1_WITH_LOW_MEMORY, 850,
+            ZGC_WITH_LOW_MEMORY, 400,
+            DEFAULT_ZGC, 3500,
+            PARALLEL, 7000,
+            PARALLEL_WITH_LOW_MEMORY, 660);
 
     public static List<String> callSOF(long cursor) {
         List<String> strings = List.of(cursor + UUID.randomUUID().toString());
@@ -58,29 +58,44 @@ public class JVMErrorGenerator {
         return callSOF(cursor);
     }
 
-    public static List<String> callOOM() throws InterruptedException {
-        List<String[]> strings = new DIYArrayList<>();
-        int[] ints = configure.get(DEFAULT_G1);
-        for (; ; ) {
-            strings.add(new String[ints[0] + new Random().nextInt(ints[0])]);
-            Thread.sleep(ints[1]);
-        }
+    public static void throwOutOfMemoryG1() {
+        throwOOM(DEFAULT_G1);
     }
 
-    public static void GClog() {
-        Runtime runtime = Runtime.getRuntime();
+    public static void throwOutOfMemoryG1WithLowMemory() {
+        throwOOM(G1_WITH_LOW_MEMORY);
+    }
 
-        System.out.println("runtime.total = " + runtime.totalMemory());
-        System.out.println("runtime.free = " + runtime.freeMemory());
+    public static void throwOutOfMemoryZGC() {
+        throwOOM(DEFAULT_ZGC);
+    }
 
-        for (int i = 0; i < 1_000_000_0; i++) {
-            UUID uuid = UUID.randomUUID();
-            uuid = null;
+    public static void throwOutOfMemoryZGCWithLowMemory() {
+        throwOOM(ZGC_WITH_LOW_MEMORY);
+    }
+
+    public static void throwOutOfMemoryParallel() {
+        throwOOM(PARALLEL);
+    }
+
+    public static void throwOutOfMemoryParallelWithLowMemory() {
+        throwOOM(PARALLEL_WITH_LOW_MEMORY);
+    }
+
+    private static void throwOOM(String parameter) {
+        List<String[]> strings = new DIYArrayList<>();
+        int capacity = configure.get(parameter);
+        for (int i = 1; ; i++) {
+            strings.add(new String[capacity]);
+            if (i % 2 == 0) {
+                strings.remove(strings.size() - 1);
+                i = 0;
+            }
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        callSOF(10_000_000);
-        Logger.getLogger(GcDemo.class.getName()).info("");
-
-        System.out.println("runtime.total = " + runtime.totalMemory());
-        System.out.println("runtime.free = " + runtime.freeMemory());
     }
 }
