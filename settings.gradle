@@ -12,4 +12,5 @@ rootProject.name = 'otus-hw-java'
 include('hw-gradle-01')
 include('hw-array-02')
 include ('hw-annotation-03')
+include ('hw-gc-04')
 
