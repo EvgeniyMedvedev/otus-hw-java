@@ -36,14 +36,19 @@ public class Interceptor {
             if (method.isAnnotationPresent(Log.class)) {
                 System.out.println("name of an executed method:" + method.getName() + ", parameters " + Arrays.toString(args));
             }
-            return method.invoke(myClass, args);
-        }
 
-        @Override
-        public String toString() {
-            return "DemoInvocationHandler{" +
-                    "myClass=" + myClass +
-                    '}';
+            switch (method.getName()){
+                case ("square") :
+                    return myClass.square((int)args[0]);
+
+                case ("sum") :
+                    if (args.length > 2){
+                        return myClass.sum((int)args[0], (int)args[1], (String) args[2]);
+                    }
+                    return myClass.sum((int)args[0], (int)args[1]);
+
+            }
+            return myClass.sumWithoutAnnotation((int)args[0], (int)args[1]);
         }
     }
 }

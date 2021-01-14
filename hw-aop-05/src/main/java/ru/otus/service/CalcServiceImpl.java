@@ -7,7 +7,6 @@ package ru.otus.service;
  */
 public class CalcServiceImpl implements CalcService{
 
-    Comparable
     @Override
     public long square(int param){
         return (long) param * param;
