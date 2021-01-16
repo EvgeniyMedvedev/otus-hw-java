@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Interceptor.
@@ -16,9 +18,9 @@ import java.util.Arrays;
  */
 public class Interceptor {
 
-    private Interceptor(){}
+    private Interceptor() {}
 
-    public static CalcService createCalc(){
+    public static CalcService createCalc() {
         InvocationHandler handler = new DemoInvocation(new CalcServiceImpl());
         return (CalcService) Proxy.newProxyInstance(Interceptor.class.getClassLoader(),
                 CalcServiceImpl.class.getInterfaces(), handler);
@@ -26,29 +28,24 @@ public class Interceptor {
 
     static class DemoInvocation implements InvocationHandler {
         private final CalcService myClass;
+        List<Method> methods;
 
-        DemoInvocation(CalcService myClass) {
+        private DemoInvocation(CalcService myClass) {
             this.myClass = myClass;
+            methods = Arrays.stream(this.myClass.getClass().getInterfaces())
+                    .flatMap(interFace -> Arrays.stream(interFace.getMethods()))
+                    .filter(m -> m.isAnnotationPresent(Log.class))
+                    .collect(Collectors.toList());
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (method.isAnnotationPresent(Log.class)) {
-                System.out.println("name of an executed method:" + method.getName() + ", parameters " + Arrays.toString(args));
+
+            if (methods.contains(method)) {
+                System.out.println("name of an executed method:" + method.getName() + ", parameter(s) " + Arrays.toString(args));
             }
 
-            switch (method.getName()){
-                case ("square") :
-                    return myClass.square((int)args[0]);
-
-                case ("sum") :
-                    if (args.length > 2){
-                        return myClass.sum((int)args[0], (int)args[1], (String) args[2]);
-                    }
-                    return myClass.sum((int)args[0], (int)args[1]);
-
-            }
-            return myClass.sumWithoutAnnotation((int)args[0], (int)args[1]);
+            return method.invoke(myClass, args);
         }
     }
 }
