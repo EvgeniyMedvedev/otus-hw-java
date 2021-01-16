@@ -28,11 +28,11 @@ public class Interceptor {
 
     static class DemoInvocation implements InvocationHandler {
         private final CalcService myClass;
-        List<Method> methods;
+        private final List<Method> methods;
 
         private DemoInvocation(CalcService myClass) {
             this.myClass = myClass;
-            methods = Arrays.stream(this.myClass.getClass().getInterfaces())
+            this.methods = Arrays.stream(this.myClass.getClass().getInterfaces())
                     .flatMap(interFace -> Arrays.stream(interFace.getMethods()))
                     .filter(m -> m.isAnnotationPresent(Log.class))
                     .collect(Collectors.toList());
