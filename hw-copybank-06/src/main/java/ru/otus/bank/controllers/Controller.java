@@ -17,16 +17,19 @@ import java.util.Map;
 public class Controller {
     private static Controller controller;
 
-    private final GiveMoneyService giveMoneyService = GiveMoneyServiceImpl.createGiveMoneyServiceImpl();
-    private final GetMoneyService getMoneyService = GetMoneyServiceImpl.createGetMoneyServiceImpl();
+    private final GiveMoneyService giveMoneyService;
+    private final GetMoneyService getMoneyService;
 
-    private Controller(){ }
+    private Controller(GiveMoneyService giveMoneyService, GetMoneyService getMoneyService){
+        this.giveMoneyService = giveMoneyService;
+        this.getMoneyService = getMoneyService;
+    }
 
-    public static Controller createController(){
+    public static Controller createController(GiveMoneyService giveMoneyService, GetMoneyService getMoneyService){
         if (controller != null){
             return controller;
         }
-        return controller = new Controller();
+        return controller = new Controller(giveMoneyService, getMoneyService);
     }
 
     public BaseResponse getMoney(int amount){

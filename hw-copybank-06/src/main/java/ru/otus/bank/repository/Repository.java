@@ -15,25 +15,23 @@ public class Repository implements BankOfSwitzerland {
     private static Repository repository;
 
     private Map<Banknotes, Integer> vault;
+    private static final int CAPACITY = 100;
 
-    private Repository() {
-        vault = new EnumMap<>(Banknotes.class);
-        for (Banknotes banknote : Banknotes.values()) {
-            vault.put(banknote, 50);
-        }
+    private Repository(EnumMap<Banknotes, Integer> vault) {
+        this.vault = vault;
     }
 
-    public static Repository createRepository() {
+    public static Repository createRepository(EnumMap<Banknotes, Integer> vault) {
         if (repository != null) {
             return repository;
         }
-        return repository = new Repository();
+        return repository = new Repository(vault);
     }
 
     @Override
     public BaseResponse get(int amount) {
         if (amount % 10 != 0) {
-            return new BaseResponse().setMsg("Такая сумма недоступна для выдачи, введите кратную 10");
+            return new BaseResponse().setErrorMsg("Такая сумма недоступна для выдачи, введите кратную 10");
         }
         int money = 0;
         while (amount >= 10) {
@@ -51,7 +49,7 @@ public class Repository implements BankOfSwitzerland {
                 try {
                     banknote = banknotes[cursor - 1];
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    return new BaseResponse().setMsg("Десяток нет, иди работай");
+                    return new BaseResponse().setErrorMsg("Десяток нет, иди работай");
                 }
             }
 
@@ -60,7 +58,7 @@ public class Repository implements BankOfSwitzerland {
             if (vault.get(banknote) != 0) {
                 vault.merge(banknote, 1, (Integer i, Integer b) -> (i - b));
             } else {
-                return new BaseResponse().setMsg("Я пуст внутри");
+                return new BaseResponse().setErrorMsg("Я пуст внутри");
             }
 
         }
@@ -71,7 +69,7 @@ public class Repository implements BankOfSwitzerland {
     public String give(Map<Banknotes, Integer> request) {
         String res = null;
         for (Map.Entry<Banknotes, Integer> entry : request.entrySet()){
-            if (vault.get(entry.getKey()) + entry.getValue() <= 100) {
+            if (vault.get(entry.getKey()) + entry.getValue() <= CAPACITY) {
                 vault.merge(entry.getKey(), entry.getValue(), Integer::sum);
                 res = "Готово";
             } else {

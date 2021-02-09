@@ -15,15 +15,17 @@ import java.util.Map;
 public class GiveMoneyServiceImpl implements GiveMoneyService {
 
     private static GiveMoneyService service;
-    private final BankOfSwitzerland repository = Repository.createRepository();
+    private final BankOfSwitzerland repository;
 
-    private GiveMoneyServiceImpl(){ }
+    private GiveMoneyServiceImpl(BankOfSwitzerland repository){
+        this.repository = repository;
+    }
 
-    public static GiveMoneyService createGiveMoneyServiceImpl() {
+    public static GiveMoneyService createGiveMoneyServiceImpl(BankOfSwitzerland repository) {
         if (service != null) {
             return service;
         }
-        return service = new GiveMoneyServiceImpl();
+        return service = new GiveMoneyServiceImpl(repository);
     }
 
     @Override

@@ -14,15 +14,17 @@ public class GetMoneyServiceImpl implements GetMoneyService {
 
     private static GetMoneyService service;
 
-    private final BankOfSwitzerland repository = Repository.createRepository();
+    private final BankOfSwitzerland repository;
 
-    private GetMoneyServiceImpl(){ }
+    private GetMoneyServiceImpl(BankOfSwitzerland repository){
+        this.repository = repository;
+    }
 
-    public static GetMoneyService createGetMoneyServiceImpl() {
+    public static GetMoneyService createGetMoneyServiceImpl(BankOfSwitzerland repository) {
         if (service != null) {
             return service;
         }
-        return service = new GetMoneyServiceImpl();
+        return service = new GetMoneyServiceImpl(repository);
     }
 
     @Override

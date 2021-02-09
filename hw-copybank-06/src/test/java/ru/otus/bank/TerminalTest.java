@@ -2,9 +2,11 @@ package ru.otus.bank;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static ru.otus.bank.configuration.Configuration.vault;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.otus.bank.configuration.Configuration;
 import ru.otus.bank.controllers.Controller;
 import ru.otus.bank.controllers.models.BaseResponse;
 import ru.otus.bank.models.Banknotes;
@@ -19,11 +21,12 @@ import java.util.Map;
  */
 public class TerminalTest {
 
-    private final Controller controller = Controller.createController();
+
+    private final Controller controller = Configuration.controller();
 
     @BeforeEach
     public void init(){
-        Repository.createRepository().clearContext();
+        Repository.createRepository(vault()).clearContext();
     }
 
     @Test
@@ -37,7 +40,7 @@ public class TerminalTest {
         BaseResponse response = controller.getMoney(amount);
 
         assertNotEquals(amount, response.getValue());
-        assertEquals("Такая сумма недоступна для выдачи, введите кратную 10", response.getMsg());
+        assertEquals("Такая сумма недоступна для выдачи, введите кратную 10", response.getErrorMsg());
     }
 
     @Test
@@ -49,7 +52,7 @@ public class TerminalTest {
             response = controller.getMoney(amount);
         }
         assertNotEquals(amount, response.getValue());
-        assertEquals("Десяток нет, иди работай", response.getMsg());
+        assertEquals("Десяток нет, иди работай", response.getErrorMsg());
     }
 
     @Test
@@ -61,7 +64,7 @@ public class TerminalTest {
             response = controller.getMoney(amount);
         }
         assertNotEquals(amount, response.getValue());
-        assertEquals("Я пуст внутри", response.getMsg());
+        assertEquals("Я пуст внутри", response.getErrorMsg());
     }
 
     @Test

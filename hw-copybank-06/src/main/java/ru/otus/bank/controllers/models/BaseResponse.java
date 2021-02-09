@@ -13,5 +13,5 @@ public class BaseResponse {
 
     private int value;
 
-    private String msg;
+    private String errorMsg;
 }
