@@ -9,10 +9,10 @@
 
 rootProject.name = 'otus-hw-java'
 
-include('hw-gradle-01')
-include('hw-array-02')
-include ('hw-annotation-03')
-include ('hw-gc-04')
-include('hw-aop-05')
-include ('hw-copybank-06')
+include('hw-01-gradle')
+include('hw-02-array')
+include ('hw-03-annotation')
+include ('hw-04-gc')
+include('hw-05-aop')
+include ('hw-06-copybank')
 

@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':hw-array-02')
+    implementation project(':hw-02-array')
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
