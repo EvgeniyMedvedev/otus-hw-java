@@ -95,10 +95,8 @@ class CustomerTest {
         //when
         Map.Entry<Customer, String> smallestScore = customerService.getSmallest();
         smallestScore.getKey().setName("Vasyl");
-        System.out.println(smallestScore + " " + customer2);
 
         //then
-        assertThat(customerService.getSmallest().getKey()).isEqualTo(customer2);
         assertThat(customerService.getSmallest().getKey().getName()).isEqualTo(customer2.getName());
     }
 
