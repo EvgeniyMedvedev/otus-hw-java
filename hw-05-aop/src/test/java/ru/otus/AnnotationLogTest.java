@@ -32,10 +32,7 @@ public class AnnotationLogTest {
         var msg = "Hi";
         var x = 3;
         var y = 2;
-        var expected = String.format("""
-                Message: %s,
-                Sum: %s
-                """, msg, x + y);
+        var expected = String.format("\nMessage: %s, \nSum: %s\n", msg, x + y);
 
         String response = calc.sum(x, y, msg);
 

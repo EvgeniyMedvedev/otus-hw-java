@@ -2,7 +2,7 @@ package homework;
 
 import java.util.Objects;
 
-public class Customer {
+public final class Customer {
     private final long id;
     private String name;
     private long scores;
@@ -24,7 +24,7 @@ public class Customer {
     }
 
     public void setName(String name) {
-        this.name = name;
+        new Customer(this.id, name, this.scores);
     }
 
     public long getScores() {
