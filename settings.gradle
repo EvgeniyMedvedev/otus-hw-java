@@ -15,4 +15,5 @@ include ('hw-03-annotation')
 include ('hw-04-gc')
 include('hw-05-aop')
 include ('hw-06-copybank')
+include ('hw-04-generics')
 

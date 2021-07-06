@@ -39,7 +39,7 @@ public class GcDemo {
 //            throwOutOfMemoryZGCWithLowMemory();
             throwOutOfMemoryParallel();
 //            throwOutOfMemoryParallelWithLowMemory();
-        }catch (OutOfMemoryError er){
+        } catch (OutOfMemoryError er) {
             System.out.printf("time: %d , count generation young - %d and old - %d%n and total working time - %d \n",
                     (System.currentTimeMillis() - beginTime) / 1000,
                     yongGenerationCount, oldGenerationCount, totalTimeGC);
