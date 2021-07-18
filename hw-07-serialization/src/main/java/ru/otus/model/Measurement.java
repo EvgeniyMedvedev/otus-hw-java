@@ -9,11 +9,6 @@ public class Measurement implements Serializable {
     private final String name;
     private final double value;
 
-    public Measurement() {
-        this.name = null;
-        this.value = 0.0;
-    }
-
     public Measurement(String name, double value) {
         this.name = name;
         this.value = value;
